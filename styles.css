@@ -1,145 +1,688 @@
-/* Charity: water Brand Colors & Fonts
 
-Primary Colors:
-- Yellow:     #FFC907
-- Blue:       #2E9DF7
-
-Secondary Colors:
-- Light Blue: #8BD1CB
-- Green:      #4FCB53
-- Orange:     #FF902A
-- Red:        #F5402C
-- Dark Green: #159A48
-- Pink:       #F16061
-
-Fonts:
-- Proxima Nova
-- Avenir
-
-*/
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* charity: water inspired color palette */
+:root {
+  --yellow: #FFC907;
+  --blue: #2E9DF7;
+  --navy: #003366;
+  --ink: #1A1A1A;
+  --cream: #FFF7E1;
+  --soft-blue: #77A8BB;
+  --green: #4FCB53;
+  --red: #F5402C;
 }
 
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f0f0f0;
-    font-family: Arial, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  background: #f2f7fa;
+  color: var(--ink);
+  font-family: Avenir, "Proxima Nova", Arial, sans-serif;
+}
+
+button, a { -webkit-tap-highlight-color: transparent; }
+button { font: inherit; }
+
+button:focus-visible, a:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
 }
 
 .game-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
+  width: min(100% - 32px, 1020px);
+  margin: 24px auto 30px;
 }
 
-.score-panel {
-    display: flex;
-    justify-content: space-between;  /* Space between score and button */
-    align-items: center;
-    width: 800px;
-    padding: 10px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 13px 20px;
+  background: white;
+  border-radius: 14px 14px 0 0;
+  border-bottom: 5px solid var(--yellow);
 }
 
-.timer {
-    flex: 0 1 auto;
-    font-size: 24px;
-    font-weight: bold;
+.brand {
+  min-height: 38px;
+  display: flex;
+  align-items: center;
 }
 
-#game-container {
-    width: 800px;
-    height: 600px;
-    background-color: #e6f7ff;
-    border: 2px solid #333;
-    border-radius: 8px;
-    position: relative;
-    overflow: hidden;
+.brand img {
+  display: block;
+  max-width: 185px;
+  max-height: 48px;
+  object-fit: contain;
 }
 
-
-#start-btn {
-    padding: 8px 16px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
+.brand-fallback {
+  font: 25px Georgia, serif;
+  letter-spacing: 2px;
+  color: #111;
 }
 
-#start-btn:hover {
-    background-color: #45a049;
+.header-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-.score {
-    flex: 0 1 auto;  /* Don't grow, can shrink, auto basis */
-    font-size: 24px;
-    font-weight: bold;
+.nav-button {
+  background: transparent;
+  border: none;
+  border-radius: 7px;
+  padding: 9px 10px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
-.water-drop {
-    position: absolute;
-    width: 60px;  /* increased from 40px */
-    height: 60px; /* increased from 40px */
-    background-color: #0099ff;
-    border-radius: 50%;
-    animation: dropFall linear forwards;
-    transform-origin: center;
-    cursor: pointer;
-    padding: 15px;  /* Add padding for larger click area */
-    margin: -15px;  /* Offset padding to maintain visual size */
-    transition: transform 0.1s ease;  /* Smooth hover effect */
+.nav-button:hover { background: var(--cream); }
+
+.intro-heading {
+  text-align: center;
+  padding: 17px 10px 19px;
 }
 
-.water-drop:hover {
-    transform: scale(1.1);  /* Slight grow effect on hover */
-}
-
-.bad-drop {
-    background-color: #ff4444;
+.eyebrow {
+  margin: 0 0 5px;
+  letter-spacing: 2px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #2b677b;
 }
 
 .game-title {
-    color: #131313;
-    font-size: 48px;
-    margin-top: 0;
-    margin-bottom: 5px;  /* reduced from 20px */
-    text-align: center;
+  font-size: clamp(32px, 6vw, 55px);
+  line-height: 1.1;
+  margin: 0;
+  letter-spacing: -2px;
 }
 
+.game-title span { color: #218aca; }
+
 .game-tagline {
-    color: #666;
-    font-size: 18px;
-    margin-bottom: 20px;
-    text-align: center;
+  font-size: 15px;
+  margin: 8px 0 0;
+  color: #45505a;
+}
+
+.score-panel {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 14px 20px;
+  background: #fff;
+  border: 1px solid #e0e6ec;
+  border-radius: 12px 12px 0 0;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+}
+
+.stat-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.stat-value {
+  font-size: 27px;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-value small { font-size: 14px; }
+
+.supply-stat {
+  flex: 1;
+  min-width: 130px;
+}
+
+.supply-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 12px;
+  margin-bottom: 7px;
+}
+
+#supply-text {
+  white-space: nowrap;
+  font-weight: 800;
+}
+
+.water-meter {
+  height: 13px;
+  background: #edf1f4;
+  border-radius: 100px;
+  overflow: hidden;
+  border: 1px solid #c6d5df;
+}
+
+.water-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--blue);
+  border-radius: inherit;
+  transition: width .2s ease;
+}
+
+.timer-stat.is-urgent .stat-value {
+  color: var(--red);
+}
+
+.game-controls {
+  display: flex;
+  gap: 8px;
+}
+
+/* Buttons */
+.button {
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 11px 19px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: filter .15s, transform .15s;
+}
+
+.button:hover:not(:disabled) {
+  filter: brightness(.96);
+  transform: translateY(-1px);
+}
+
+.button:disabled {
+  opacity: .42;
+  cursor: not-allowed;
+}
+
+.button-yellow {
+  background: var(--yellow);
+  color: #111;
+}
+
+.button-outline {
+  background: white;
+  border-color: #9daeb9;
+  color: #253643;
+}
+
+/* Game background */
+#game-container {
+  position: relative;
+  overflow: hidden;
+  height: clamp(390px, 55vw, 510px);
+  background: linear-gradient(
+    #87d3fa 0%,
+    #c3edff 61%,
+    #d5eeba 100%
+  );
+  border: 2px solid #1b3847;
+  border-top: 0;
+  border-radius: 0 0 14px 14px;
+  isolation: isolate;
+}
+
+.sun {
+  position: absolute;
+  top: 30px;
+  right: 12%;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #ffe6a2;
+  box-shadow: 0 0 30px #fff1c1;
+}
+
+.cloud {
+  position: absolute;
+  width: 115px;
+  height: 27px;
+  background: #f9ffffdb;
+  border-radius: 50px;
+}
+
+.cloud::before, .cloud::after {
+  content: "";
+  position: absolute;
+  background: inherit;
+  border-radius: 50%;
+}
+
+.cloud::before {
+  width: 50px;
+  height: 50px;
+  bottom: 2px;
+  left: 14px;
+}
+
+.cloud::after {
+  width: 66px;
+  height: 40px;
+  bottom: 0;
+  left: 48px;
+}
+
+.cloud-one {
+  top: 85px;
+  left: 7%;
+}
+
+.cloud-two {
+  top: 150px;
+  right: 22%;
+  transform: scale(.75);
+}
+
+/* Hills and grass */
+.hill {
+  position: absolute;
+  bottom: 31px;
+  width: 75%;
+  border-radius: 50% 50% 0 0;
+}
+
+.hill-back {
+  left: -22%;
+  height: 175px;
+  background: #b1d78d;
+}
+
+.hill-front {
+  right: -21%;
+  height: 155px;
+  background: #82bd72;
+}
+
+.ground {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 44px;
+  background: #72b15b;
+  border-top: 8px solid #91c870;
+}
+
+/* Village houses */
+.village {
+  position: absolute;
+  bottom: 30px;
+  width: 100%;
+  height: 160px;
+}
+
+.house {
+  position: absolute;
+  bottom: 4px;
+  width: 77px;
+  height: 72px;
+  background: #eed099;
+  border: 3px solid #b78f5c;
+  border-radius: 3px;
+}
+
+.house::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  right: -10px;
+  top: -34px;
+  height: 36px;
+  background: #8e725d;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+.house::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 31px;
+  width: 17px;
+  height: 33px;
+  background: #876243;
+  border: 2px solid #6e513e;
+  border-bottom: 0;
+}
+
+.house-one {
+  left: 9%;
+  transform: scale(.85);
+  transform-origin: bottom;
+}
+
+.house-two {
+  left: 45%;
+  transform: scale(.62);
+  transform-origin: bottom;
+}
+
+.house-three {
+  right: 12%;
+  transform: scale(.92);
+  transform-origin: bottom;
+}
+
+/* Village trees */
+.tree {
+  position: absolute;
+  bottom: 0;
+  width: 14px;
+  height: 90px;
+  background: #795d3c;
+  border-radius: 3px;
+}
+
+.tree::before {
+  content: "";
+  position: absolute;
+  bottom: 44px;
+  left: -31px;
+  width: 77px;
+  height: 77px;
+  border-radius: 50%;
+  background: #519b5a;
+  box-shadow: 13px 2px 0 #63a866;
+}
+
+.tree-one { left: 24%; }
+
+.tree-two {
+  left: 71%;
+  transform: scale(.84);
+  transform-origin: bottom;
+}
+
+.tree-three {
+  right: 4%;
+  transform: scale(.72);
+  transform-origin: bottom;
+}
+
+/* Layers */
+#items-layer, #feedback-layer, #confetti-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+#items-layer { z-index: 3; }
+#feedback-layer { z-index: 5; }
+#confetti-layer { z-index: 12; }
+
+/* Falling water, dirty water, trash and stars */
+.falling-item {
+  position: absolute;
+  top: -75px;
+  z-index: 3;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+  animation: dropFall linear forwards;
+  filter: drop-shadow(0 3px 1px #00336633);
+}
+
+.falling-item .shape {
+  display: block;
+  width: 75%;
+  height: 75%;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(135deg);
+  border: 2px solid #07578f;
+  background: linear-gradient(135deg, #2E9DF7, #79d8ff);
+  transition: scale .12s;
+}
+
+.falling-item:hover .shape { scale: 1.12; }
+
+.falling-item.dirty .shape {
+  background: linear-gradient(135deg, #202b34, #75818b);
+  border-color: #171d22;
+}
+
+.falling-item.trash,
+.falling-item.star {
+  font-size: 37px;
+  line-height: 1;
+}
+
+.falling-item:focus-visible {
+  border-radius: 8px;
+  outline: 3px solid var(--yellow);
 }
 
 @keyframes dropFall {
-    from {
-        transform: translateY(-20px);
-    }
-    to {
-        transform: translateY(600px);
-    }
+  from { top: -75px; }
+  to { top: calc(100% + 75px); }
 }
 
-@media (max-width: 850px) {
-    .game-wrapper, .score-panel, #game-container {
-        width: 95vw;
-    }
-    
-    #game-container {
-        height: 70vh;
-    }
+.is-paused .falling-item {
+  animation-play-state: paused;
+}
+
+/* Points appearing after clicking */
+.feedback {
+  position: absolute;
+  font-weight: 900;
+  font-size: 24px;
+  color: #006e44;
+  -webkit-text-stroke: .5px #fff;
+  animation: floatUp .7s ease-out forwards;
+}
+
+.feedback.negative { color: #a52020; }
+
+@keyframes floatUp {
+  to {
+    transform: translateY(-48px);
+    opacity: 0;
+  }
+}
+
+/* Menu overlay */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  background: #09293999;
+  padding: 18px;
+}
+
+.dialog {
+  width: min(100%, 445px);
+  max-height: 95%;
+  overflow: auto;
+  padding: 28px 28px 25px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 15px 45px #082d4180;
+  text-align: center;
+}
+
+.dialog h2 {
+  font-size: clamp(25px, 4.5vw, 34px);
+  margin: 4px 0 10px;
+}
+
+.dialog p {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #34434d;
+  margin: 8px 0 16px;
+}
+
+.dialog .dialog-accent {
+  font-size: 43px;
+  line-height: 1.1;
+}
+
+.dialog .dialog-kicker {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #266987;
+}
+
+.dialog .dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 20px;
+}
+
+.dialog .dialog-actions .button {
+  min-width: 130px;
+}
+
+.dialog .rules-list {
+  display: grid;
+  gap: 8px;
+  margin: 15px 0;
+  text-align: left;
+}
+
+.dialog .rule {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px;
+  border-radius: 7px;
+  background: #f3f8fb;
+  font-size: 14px;
+}
+
+.dialog .rule .rule-icon {
+  font-size: 27px;
+  width: 30px;
+  text-align: center;
+}
+
+.dialog .rule strong { white-space: nowrap; }
+
+.dialog .high-score-list {
+  max-width: 260px;
+  margin: 18px auto;
+  padding: 0;
+  list-style: none;
+}
+
+.dialog .high-score-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 9px 14px;
+  border-bottom: 1px solid #e4e8ed;
+}
+
+.dialog .high-score-list li:nth-child(odd) {
+  background: #f5f9fb;
+}
+
+.dialog a {
+  color: #0f668d;
+  font-weight: 800;
+}
+
+/* Confetti celebration */
+.confetti {
+  position: absolute;
+  top: -24px;
+  width: 9px;
+  height: 16px;
+  opacity: 0;
+  animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(-15px) rotate(0deg);
+    opacity: 1;
+  }
+  95% { opacity: 1; }
+  100% {
+    transform: translateY(570px) rotate(850deg);
+    opacity: 0;
+  }
+}
+
+/* Footer */
+.site-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 15px 6px;
+  font-size: 13px;
+}
+
+.site-footer p { margin: 0; }
+.site-footer a { color: var(--navy); }
+
+/* Mobile layout */
+@media (max-width: 650px) {
+  .game-wrapper {
+    width: min(100% - 16px, 510px);
+    margin: 8px auto;
+  }
+
+  .site-header {
+    padding: 10px;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .brand img { max-height: 34px; }
+  .brand-fallback { font-size: 21px; }
+  .header-nav { justify-content: center; }
+  .nav-button { padding: 7px 9px; font-size: 12px; }
+  .intro-heading { padding: 12px 6px; }
+  .game-title { letter-spacing: -1px; }
+  .game-tagline { font-size: 12px; }
+
+  .score-panel {
+    gap: 8px 12px;
+    padding: 10px;
+    flex-wrap: wrap;
+  }
+
+  .supply-stat {
+    order: 3;
+    flex-basis: 100%;
+  }
+
+  .game-controls { margin-left: auto; }
+  .button { padding: 9px 12px; font-size: 13px; }
+  .stat-value { font-size: 23px; }
+
+  #game-container {
+    height: min(62vh, 540px);
+    min-height: 365px;
+  }
+
+  .dialog { padding: 19px 16px; }
+  .house-two { display: none; }
+
+  .site-footer {
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button, .water-fill { transition: none; }
 }
