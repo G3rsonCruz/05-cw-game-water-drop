@@ -241,10 +241,23 @@ function createDrop() {
     : (type === "star") ? "⭐"
     : '<span class="shape" aria-hidden="true"></span>';
 
-  // Award or subtract points when clicked
-  item.addEventListener("click", () => {
+  // Collect immediately when the player presses the drop
+item.addEventListener("pointerdown", (event) => {
+  
+  if (event.pointerType === "mouse" && event.button !== 0) {
+    return;
+  }
+
+  event.preventDefault();
+  collectItem(item, points);
+});
+
+// Also support collecting drops using the keyboard
+item.addEventListener("click", (event) => {
+  if (event.detail === 0) {
     collectItem(item, points);
-  });
+  }
+});
 
   // Remove an item when it reaches the bottom
   item.addEventListener("animationend", () => {
