@@ -25,6 +25,7 @@ body {
 button, a { -webkit-tap-highlight-color: transparent; }
 button { font: inherit; }
 
+/* Keep keyboard focus easy to see. */
 button:focus-visible, a:focus-visible {
   outline: 3px solid var(--blue);
   outline-offset: 3px;
@@ -172,6 +173,7 @@ button:focus-visible, a:focus-visible {
   width: 0%;
   background: var(--blue);
   border-radius: inherit;
+  /* Animate progress as the collected water changes. */
   transition: width .2s ease;
 }
 
@@ -441,6 +443,7 @@ button:focus-visible, a:focus-visible {
   display: block;
   width: 75%;
   height: 75%;
+  /* Rotate a rounded shape into a simple water-drop silhouette. */
   border-radius: 50% 50% 50% 0;
   transform: rotate(135deg);
   border: 2px solid #07578f;
