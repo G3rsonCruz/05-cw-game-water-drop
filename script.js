@@ -1,7 +1,4 @@
 
-// Drop by Drop: charity: water-inspired collection game
-// Goal: collect at least 20 points before the 30-second timer ends.
-
 const GAME_LENGTH = 30_000; // 30 seconds
 const WIN_SCORE = 20;
 const SPAWN_SPEED = 470; // Create a new item every 470 ms
@@ -86,6 +83,7 @@ function startTimers() {
 
     const now = performance.now();
 
+    // Use elapsed time so delayed timer ticks do not extend the round.
     timeRemaining = Math.max(
       0,
       timeRemaining - (now - lastTick)
@@ -194,6 +192,7 @@ function createDrop() {
   const chance = Math.random();
 
   // Choose a random item type
+  // Clean water is common; bonus stars are intentionally rare.
   const type = chance < 0.73 ? "clean"
     : chance < 0.91 ? "dirty"
     : chance < 0.98 ? "trash" : "star";
@@ -253,6 +252,7 @@ item.addEventListener("pointerdown", (event) => {
 });
 
 // Also support collecting drops using the keyboard
+// Keyboard activation creates a click without a pointer event.
 item.addEventListener("click", (event) => {
   if (event.detail === 0) {
     collectItem(item, points);
@@ -604,6 +604,7 @@ function showPanel(screen) {
 
   const firstButton = overlayContent.querySelector("button");
 
+  // Move keyboard focus into the newly opened menu.
   if (firstButton) {
     firstButton.focus({ preventScroll: true });
   }
