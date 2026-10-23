@@ -220,8 +220,8 @@ function createDrop() {
   item.className = `falling-item ${type}`;
   item.setAttribute("aria-label", labels[type]);
 
-  // Random size and location
-  const size = 43 + Math.random() * 16;
+  // Larger invisible click area around the drop
+const size = 68 + Math.random() * 12;
 
   const maxLeft = Math.max(
     0,
