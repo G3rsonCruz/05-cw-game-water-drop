@@ -432,6 +432,9 @@ button:focus-visible, a:focus-visible {
   touch-action: manipulation;
   animation: dropFall linear forwards;
   filter: drop-shadow(0 3px 1px #00336633);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .falling-item .shape {
