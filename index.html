@@ -1,25 +1,106 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Water Drop Game</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drop by Drop | A Game for Clean Water</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
 </head>
 <body>
-    <div class="game-wrapper">
-        <h1 class="game-title">Water Drop</h1>
-        <p class="game-tagline">Catch the good drops, avoid the bad ones!</p>
-        <div class="score-panel">
-            <div class="score">Score: <span id="score">0</span></div>
-            <div class="timer">Time: <span id="time">30</span>s</div>
-            <button id="start-btn">Start Game</button>
-        </div>
-        
-        <div id="game-container">
-        </div>
+  <main class="game-wrapper">
+    <header class="site-header">
+      <div class="brand">
+        <!-- Add the provided charity: water logo to this folder -->
+        <img src="charity-water-logo.png" alt="charity: water"
+             onerror="this.hidden=true; this.nextElementSibling.hidden=false">
+        <span class="brand-fallback" hidden>charity: water</span>
+      </div>
+      <nav class="header-nav" aria-label="Game navigation">
+        <button type="button" id="how-btn" class="nav-button">How to Play</button>
+        <button type="button" id="about-btn" class="nav-button">About</button>
+        <button type="button" id="scores-btn" class="nav-button">High Scores</button>
+      </nav>
+    </header>
+
+    <div class="intro-heading">
+      <p class="eyebrow">PLAY · LEARN · MAKE A DIFFERENCE</p>
+      <h1 class="game-title">Drop by <span>Drop</span></h1>
+      <p class="game-tagline">Catch clean water. Avoid obstacles. Help fill the village's water supply!</p>
     </div>
-    
-    <script src="script.js"></script>
+
+    <section class="score-panel" aria-label="Game information and controls">
+      <div class="stat">
+        <span class="stat-label">SCORE</span>
+        <strong id="score" class="stat-value" aria-live="polite">0</strong>
+      </div>
+
+      <div class="supply-stat">
+        <div class="supply-heading">
+          <span class="stat-label">VILLAGE WATER SUPPLY</span>
+          <span id="supply-text">0 / 20</span>
+        </div>
+        <div id="water-meter" class="water-meter" role="progressbar"
+             aria-label="Water supply progress"
+             aria-valuemin="0" aria-valuemax="20" aria-valuenow="0">
+          <div id="water-fill" class="water-fill"></div>
+        </div>
+      </div>
+
+      <div class="stat timer-stat">
+        <span class="stat-label">TIME LEFT</span>
+        <strong class="stat-value">
+          <span id="time">30</span><small>s</small>
+        </strong>
+      </div>
+
+      <div class="game-controls">
+        <button type="button" id="pause-btn" class="button button-outline" disabled>Pause</button>
+        <button type="button" id="reset-btn" class="button button-outline">Reset</button>
+      </div>
+    </section>
+
+    <section id="game-container" aria-label="Water drop game area">
+      <!-- Village background -->
+      <div class="sun" aria-hidden="true"></div>
+      <div class="cloud cloud-one" aria-hidden="true"></div>
+      <div class="cloud cloud-two" aria-hidden="true"></div>
+      <div class="hill hill-back" aria-hidden="true"></div>
+      <div class="hill hill-front" aria-hidden="true"></div>
+
+      <div class="village" aria-hidden="true">
+        <div class="tree tree-one"></div>
+        <div class="house house-one"></div>
+        <div class="house house-two"></div>
+        <div class="tree tree-two"></div>
+        <div class="house house-three"></div>
+        <div class="tree tree-three"></div>
+      </div>
+
+      <div class="ground" aria-hidden="true"></div>
+
+      <!-- JavaScript adds falling items here -->
+      <div id="items-layer"></div>
+      <div id="feedback-layer" aria-hidden="true"></div>
+      <div id="confetti-layer" aria-hidden="true"></div>
+
+      <!-- Menus and result screens -->
+      <div id="overlay" class="overlay">
+        <div id="overlay-content" class="dialog"
+             role="dialog" aria-modal="true"
+             aria-label="Game menu"></div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p><strong>Clean water changes everything.</strong>
+        Inspired by the mission of charity: water.</p>
+      <a href="https://www.charitywater.org/"
+         target="_blank" rel="noopener noreferrer">
+        Learn about the mission ↗
+      </a>
+    </footer>
+  </main>
 </body>
 </html>
