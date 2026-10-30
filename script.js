@@ -1,41 +1,24 @@
 
-// Drop by Drop - LevelUp Edition
-// Controls scoring, difficulty, timers, sounds,
-// milestones, DOM interactions and game menus.
+// Drop by Drop - Safari Optimized Edition
+// Handles difficulty modes, scoring, sounds, milestones,
+// animations, pause/reset, and win/lose screens.
 
-// Each mode has different goals and speeds.
+// Difficulty settings
 const MODES = {
   easy: {
-    name: "Easy",
-    goal: 12,
-    seconds: 35,
-    spawnMs: 620,
-    minFall: 4.1,
-    maxFall: 5.2,
-    cleanChance: 0.82,
-    dirtyChance: 0.12
+    name: "Easy", goal: 12, seconds: 35,
+    spawnMs: 620, minFall: 4.1, maxFall: 5.2,
+    cleanChance: 0.82, dirtyChance: 0.12
   },
-
   normal: {
-    name: "Normal",
-    goal: 20,
-    seconds: 30,
-    spawnMs: 470,
-    minFall: 3.2,
-    maxFall: 4.6,
-    cleanChance: 0.73,
-    dirtyChance: 0.18
+    name: "Normal", goal: 20, seconds: 30,
+    spawnMs: 470, minFall: 3.2, maxFall: 4.6,
+    cleanChance: 0.73, dirtyChance: 0.18
   },
-
   hard: {
-    name: "Hard",
-    goal: 26,
-    seconds: 25,
-    spawnMs: 330,
-    minFall: 2.1,
-    maxFall: 3.0,
-    cleanChance: 0.62,
-    dirtyChance: 0.23
+    name: "Hard", goal: 26, seconds: 25,
+    spawnMs: 330, minFall: 2.1, maxFall: 3.0,
+    cleanChance: 0.62, dirtyChance: 0.23
   }
 };
 
@@ -47,13 +30,11 @@ const confettiLayer = document.getElementById("confetti-layer");
 const milestoneBanner = document.getElementById("milestone-banner");
 const overlay = document.getElementById("overlay");
 const overlayContent = document.getElementById("overlay-content");
-
 const scoreDisplay = document.getElementById("score");
 const timeDisplay = document.getElementById("time");
 const supplyText = document.getElementById("supply-text");
 const waterFill = document.getElementById("water-fill");
 const waterMeter = document.getElementById("water-meter");
-
 const pauseBtn = document.getElementById("pause-btn");
 const difficultySelect = document.getElementById("difficulty-select");
 const modeDetails = document.getElementById("mode-details");
@@ -64,33 +45,31 @@ let selectedMode = "normal";
 let score = 0;
 let timeRemaining = MODES.normal.seconds * 1000;
 let gameState = "ready";
-
 let dropMaker = null;
 let gameTimer = null;
 let bannerTimer = null;
 let confettiTimer = null;
-
 let lastTick = 0;
 let lastMissSound = 0;
 let resultMessage = "";
 let shownMilestones = new Set();
 let soundEnabled = true;
 
-// Random messages for winning
+// Winning messages
 const winningMessages = [
   "You did it! You filled the village's water supply!",
   "Amazing work! Your clean-water collection made a difference!",
   "Every drop counts, and you collected enough to win!"
 ];
 
-// Random messages for losing
+// Losing messages
 const losingMessages = [
   "Time's up! Try again and collect even more clean water!",
   "Every drop matters. You can reach the goal next time!",
   "The village needs more clean water. You've got this!"
 ];
 
-// Milestone messages
+// Milestone messages for each difficulty
 const milestones = [
   {
     percent: 0.25,
@@ -110,51 +89,188 @@ const milestones = [
   }
 ];
 
-// Choose a random message
+// Pick a random message
 function randomMessage(messages) {
   return messages[Math.floor(Math.random() * messages.length)];
 }
 
-// Get the current difficulty settings
+// Get current difficulty
 function settings() {
   return MODES[selectedMode];
 }
 
 /* ==========================================
-   SOUND EFFECTS
+   SAFARI-OPTIMIZED AUDIO SYSTEM
 ========================================== */
 
-// Sound files are stored in the sounds folder.
-const sounds = {
-  collect: new Audio("sounds/collect.wav"),
-  obstacle: new Audio("sounds/obstacle.wav"),
-  miss: new Audio("sounds/miss.wav"),
-  button: new Audio("sounds/button.wav"),
-  milestone: new Audio("sounds/milestone.wav"),
-  win: new Audio("sounds/win.wav")
+// Load each WAV only once instead of cloning audio elements.
+const SOUND_FILES = {
+  collect: "sounds/collect.wav",
+  obstacle: "sounds/obstacle.wav",
+  miss: "sounds/miss.wav",
+  button: "sounds/button.wav",
+  milestone: "sounds/milestone.wav",
+  win: "sounds/win.wav"
 };
 
-// Set the volume of each sound
-Object.values(sounds).forEach(audio => {
-  audio.preload = "auto";
-  audio.volume = 0.35;
-});
+// Audio storage
+const audioBytes = new Map();
+const audioBuffers = new Map();
+const decoding = new Set();
+const activeSounds = new Set();
 
-// Play a sound effect
-function playSound(name) {
-  if (!soundEnabled || !sounds[name]) return;
+let audioContext = null;
 
-  // Clone the audio so quick clicks can overlap.
-  const audio = sounds[name].cloneNode();
+// Download the sound files before gameplay
+for (const [name, path] of Object.entries(SOUND_FILES)) {
+  fetch(path)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
 
-  audio.volume = name === "miss" ? 0.15 : 0.35;
-
-  audio.play().catch(() => {
-    // Audio may be blocked or unavailable.
-  });
+      return response.arrayBuffer();
+    })
+    .then(bytes => {
+      audioBytes.set(name, bytes);
+      decodeSound(name);
+    })
+    .catch(error => {
+      console.warn(`Unable to load ${path}:`, error);
+    });
 }
 
-// Update the sound button
+// Convert a sound file into reusable audio data
+function decodeSound(name) {
+  if (
+    !audioContext ||
+    !audioBytes.has(name) ||
+    audioBuffers.has(name) ||
+    decoding.has(name)
+  ) {
+    return;
+  }
+
+  decoding.add(name);
+
+  const bytes = audioBytes.get(name).slice(0);
+
+  audioContext.decodeAudioData(bytes)
+    .then(buffer => {
+      audioBuffers.set(name, buffer);
+    })
+    .catch(error => {
+      console.warn(`Cannot decode ${name}:`, error);
+    })
+    .finally(() => {
+      decoding.delete(name);
+    });
+}
+
+// Safari requires a user interaction before starting audio
+function unlockAudio() {
+  if (!soundEnabled) return;
+
+  if (!audioContext) {
+    const AudioEngine =
+      window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioEngine) return;
+
+    try {
+      audioContext = new AudioEngine({
+        latencyHint: "interactive"
+      });
+    } catch (error) {
+      console.warn("Unable to start audio engine:", error);
+      return;
+    }
+  }
+
+  // Try to resume interrupted or suspended Safari audio
+  if (audioContext.state !== "running") {
+    audioContext.resume().catch(() => {});
+  }
+
+  // Decode any sounds that have finished downloading
+  for (const name of audioBytes.keys()) {
+    decodeSound(name);
+  }
+}
+
+// Unlock audio on mouse, touch or keyboard interaction
+document.addEventListener(
+  "pointerdown",
+  unlockAudio,
+  { capture: true }
+);
+
+document.addEventListener(
+  "keydown",
+  unlockAudio,
+  { capture: true }
+);
+
+// Stop currently playing sounds
+function stopAllSounds() {
+  for (const source of activeSounds) {
+    try {
+      source.stop();
+    } catch {
+      // The sound may already have finished
+    }
+  }
+
+  activeSounds.clear();
+}
+
+// Play a sound instantly if ready
+function playSound(name) {
+  if (
+    !soundEnabled ||
+    !audioContext ||
+    audioContext.state !== "running"
+  ) {
+    return;
+  }
+
+  const buffer = audioBuffers.get(name);
+
+  // Skip unready sounds instead of playing them later
+  if (!buffer) return;
+
+  // Avoid too many simultaneous sound effects
+  if (activeSounds.size >= 8) return;
+
+  try {
+    const source = audioContext.createBufferSource();
+    const volume = audioContext.createGain();
+
+    source.buffer = buffer;
+
+    // Make missed water quieter
+    volume.gain.value =
+      name === "miss" ? 0.12 : 0.32;
+
+    source.connect(volume);
+    volume.connect(audioContext.destination);
+
+    activeSounds.add(source);
+
+    // Clean up the sound when it finishes
+    source.onended = () => {
+      activeSounds.delete(source);
+      source.disconnect();
+      volume.disconnect();
+    };
+
+    source.start();
+  } catch (error) {
+    console.warn("Unable to play sound:", error);
+  }
+}
+
+// Update sound toggle button
 function updateSoundButton() {
   soundBtn.textContent = soundEnabled
     ? "🔊 Sound On"
@@ -167,17 +283,15 @@ function updateSoundButton() {
 }
 
 /* ==========================================
-   UPDATE THE GAME DISPLAY
+   UPDATE SCORE, TIMER AND WATER SUPPLY
 ========================================== */
 
 function updateDisplay() {
   const mode = settings();
 
-  // Update score and timer
   scoreDisplay.textContent = score;
   timeDisplay.textContent = Math.ceil(timeRemaining / 1000);
 
-  // Update water supply progress
   supplyText.textContent =
     `${Math.min(score, mode.goal)} / ${mode.goal}`;
 
@@ -194,13 +308,11 @@ function updateDisplay() {
     String(mode.goal)
   );
 
-  // Display the selected difficulty
   modeDetails.textContent =
     `${mode.goal} points · ${mode.seconds} seconds`;
 
   difficultySelect.value = selectedMode;
 
-  // Turn the timer red near the end
   document.querySelector(".timer-stat").classList.toggle(
     "is-urgent",
     timeRemaining <= 10000
@@ -208,10 +320,9 @@ function updateDisplay() {
 }
 
 /* ==========================================
-   GAME TIMERS
+   GAME TIMER FUNCTIONS
 ========================================== */
 
-// Stop all game intervals
 function stopTimers() {
   clearInterval(dropMaker);
   clearInterval(gameTimer);
@@ -220,7 +331,7 @@ function stopTimers() {
   gameTimer = null;
 }
 
-// Remove old animations and milestone messages
+// Remove previous messages and animations
 function clearEffects() {
   clearTimeout(bannerTimer);
   clearTimeout(confettiTimer);
@@ -232,17 +343,15 @@ function clearEffects() {
   confettiLayer.replaceChildren();
 }
 
-// Start the countdown and falling items
+// Start the countdown and create drops
 function startTimers() {
   lastTick = performance.now();
 
-  // Create drops according to the difficulty
   dropMaker = setInterval(
     createDrop,
     settings().spawnMs
   );
 
-  // Update the countdown
   gameTimer = setInterval(() => {
     if (gameState !== "playing") return;
 
@@ -255,25 +364,28 @@ function startTimers() {
 
     lastTick = now;
 
-    updateDisplay();
+    // Only refresh the countdown when the second changes
+    if (
+      Number(timeDisplay.textContent) !==
+      Math.ceil(timeRemaining / 1000)
+    ) {
+      updateDisplay();
+    }
 
-    // End the game when time runs out
     if (timeRemaining === 0) {
       endGame();
     }
-  }, 80);
+  }, 100);
 }
 
 /* ==========================================
-   START, PAUSE, RESUME AND RESET
+   START GAME
 ========================================== */
 
-// Start a new game
 function startGame() {
   stopTimers();
   clearEffects();
 
-  // Remove any previous drops
   itemsLayer.replaceChildren();
   shownMilestones.clear();
 
@@ -288,17 +400,19 @@ function startGame() {
   pauseBtn.textContent = "Pause";
 
   updateDisplay();
-
   playSound("button");
 
-  // Create the first drop immediately
+  // Create the first drop
   createDrop();
 
-  // Start regular drops and the countdown
+  // Start countdown and drop generation
   startTimers();
 }
 
-// Pause the game
+/* ==========================================
+   PAUSE AND RESUME
+========================================== */
+
 function pauseGame() {
   if (gameState !== "playing") return;
 
@@ -315,8 +429,6 @@ function pauseGame() {
   stopTimers();
 
   gameState = "paused";
-
-  // Freeze the falling animations
   gameContainer.classList.add("is-paused");
 
   pauseBtn.textContent = "Resume";
@@ -325,7 +437,6 @@ function pauseGame() {
   showPanel("pause");
 }
 
-// Resume the game
 function resumeGame() {
   if (gameState !== "paused") return;
 
@@ -337,11 +448,13 @@ function resumeGame() {
   pauseBtn.textContent = "Pause";
 
   playSound("button");
-
   startTimers();
 }
 
-// Reset everything
+/* ==========================================
+   RESET AND DIFFICULTY
+========================================== */
+
 function resetGame() {
   stopTimers();
   clearEffects();
@@ -362,7 +475,6 @@ function resetGame() {
   showPanel("welcome");
 }
 
-// Change the difficulty
 function chooseDifficulty(mode) {
   if (!MODES[mode]) return;
 
@@ -370,7 +482,7 @@ function chooseDifficulty(mode) {
 
   playSound("button");
 
-  // Changing difficulty starts a fresh round
+  // Restart when the difficulty changes
   resetGame();
 }
 
@@ -378,7 +490,6 @@ function chooseDifficulty(mode) {
    MILESTONE MESSAGES
 ========================================== */
 
-// Display a milestone message
 function showMilestone(message) {
   clearTimeout(bannerTimer);
 
@@ -387,20 +498,16 @@ function showMilestone(message) {
 
   playSound("milestone");
 
-  // Hide the message after 2.1 seconds
   bannerTimer = setTimeout(() => {
     milestoneBanner.hidden = true;
   }, 2100);
 }
 
-// Check whether the player reached a milestone
 function checkMilestones(previousScore) {
   const mode = settings();
-
   let newest = null;
 
   milestones.forEach((milestone, index) => {
-    // Calculate the milestone based on difficulty
     const threshold = Math.ceil(
       mode.goal * milestone.percent
     );
@@ -421,17 +528,16 @@ function checkMilestones(previousScore) {
 }
 
 /* ==========================================
-   CREATE FALLING WATER DROPS
+   CREATE FALLING ITEMS
 ========================================== */
 
 function createDrop() {
   if (gameState !== "playing") return;
 
   const mode = settings();
-
-  // Randomly choose a falling item
   const chance = Math.random();
 
+  // Randomly choose the type of item
   const type = chance < mode.cleanChance
     ? "clean"
     : chance < mode.cleanChance + mode.dirtyChance
@@ -440,7 +546,7 @@ function createDrop() {
         ? "trash"
         : "star";
 
-  // Point values for each item
+  // Points for each item
   const points = {
     clean: 1,
     dirty: -1,
@@ -448,7 +554,6 @@ function createDrop() {
     star: 3
   }[type];
 
-  // Descriptions for accessibility
   const labels = {
     clean: "Collect clean water, plus 1 point",
     dirty: "Dirty water, minus 1 point",
@@ -456,15 +561,14 @@ function createDrop() {
     star: "Water filter bonus, plus 3 points"
   };
 
-  // Create the falling item
+  // Create a new item in the DOM
   const item = document.createElement("button");
 
   item.type = "button";
   item.className = `falling-item ${type}`;
-
   item.setAttribute("aria-label", labels[type]);
 
-  // Large clickable area for reliable tapping
+  // Large clickable area
   const size = 68 + Math.random() * 12;
 
   const maxLeft = Math.max(
@@ -475,24 +579,30 @@ function createDrop() {
   item.style.width = `${size}px`;
   item.style.height = `${size}px`;
 
-  // Random horizontal position
+  // Random horizontal location
   item.style.left =
     `${6 + Math.random() * maxLeft}px`;
 
-  // Different falling speeds for each mode
+  // Safari fix: move with transform instead of top
+  item.style.setProperty(
+    "--drop-distance",
+    `${gameContainer.clientHeight + 150}px`
+  );
+
+  // Falling speed depends on difficulty
   item.style.animationDuration = `${
     mode.minFall +
     Math.random() * (mode.maxFall - mode.minFall)
   }s`;
 
-  // Display the correct object
+  // Choose the item's appearance
   item.innerHTML = type === "trash"
     ? "🗑️"
     : type === "star"
       ? "⭐"
       : '<span class="shape" aria-hidden="true"></span>';
 
-  // FIX: Register clicks immediately using pointerdown
+  // Register collection instantly on the first press
   item.addEventListener("pointerdown", event => {
     if (
       event.pointerType === "mouse" &&
@@ -502,22 +612,20 @@ function createDrop() {
     }
 
     event.preventDefault();
-
     collectItem(item, points);
   });
 
-  // Keyboard support using Enter or Space
+  // Support keyboard input
   item.addEventListener("click", event => {
     if (event.detail === 0) {
       collectItem(item, points);
     }
   });
 
-  // Remove items that fall off the screen
+  // Remove items when they reach the ground
   item.addEventListener("animationend", event => {
     if (event.animationName !== "dropFall") return;
 
-    // Play a sound when clean water is missed
     if (
       gameState === "playing" &&
       item.isConnected &&
@@ -525,7 +633,7 @@ function createDrop() {
     ) {
       const now = performance.now();
 
-      // Prevent too many miss sounds playing together
+      // Avoid a large number of missed-drop sounds
       if (now - lastMissSound > 650) {
         playSound("miss");
         lastMissSound = now;
@@ -535,16 +643,15 @@ function createDrop() {
     item.remove();
   });
 
-  // Add the item to the game
   itemsLayer.appendChild(item);
 }
 
 /* ==========================================
-   COLLECT ITEMS AND UPDATE SCORE
+   COLLECT ITEMS AND AWARD POINTS
 ========================================== */
 
 function collectItem(item, points) {
-  // Prevent collecting the same item twice
+  // Prevent duplicate collection
   if (
     gameState !== "playing" ||
     !item.isConnected
@@ -561,29 +668,26 @@ function collectItem(item, points) {
 
   const y = itemRect.top - gameRect.top;
 
-  // Remove the collected drop from the DOM
+  // Remove the item immediately
   item.remove();
 
   const oldScore = score;
 
-  // Add or subtract points
   score = Math.max(0, score + points);
 
   updateDisplay();
-
-  // Display floating +1 / -1 / +3 feedback
   showFeedback(x, y, points);
 
-  // Play the corresponding sound
+  // Play appropriate sound
   playSound(points > 0 ? "collect" : "obstacle");
 
-  // Check for milestones after positive collections
+  // Check milestone messages
   if (points > 0) {
     checkMilestones(oldScore);
   }
 }
 
-// Display score feedback where an item was collected
+// Display floating point feedback
 function showFeedback(x, y, points) {
   const feedback = document.createElement("span");
 
@@ -598,22 +702,21 @@ function showFeedback(x, y, points) {
 
   feedbackLayer.appendChild(feedback);
 
-  // Remove the feedback when animation finishes
   feedback.addEventListener("animationend", () => {
     feedback.remove();
   });
 }
 
 /* ==========================================
-   END GAME AND CHECK FOR WIN
+   END GAME
 ========================================== */
 
 function endGame() {
   if (gameState === "finished") return;
 
   stopTimers();
-
   clearTimeout(bannerTimer);
+
   milestoneBanner.hidden = true;
 
   gameState = "finished";
@@ -622,33 +725,28 @@ function endGame() {
   pauseBtn.disabled = true;
   pauseBtn.textContent = "Pause";
 
-  // Remove all remaining falling items
   itemsLayer.replaceChildren();
 
   updateDisplay();
-
-  // Save the score for the selected mode
   saveHighScore(score);
 
-  // Determine whether the player won
   if (score >= settings().goal) {
     resultMessage = randomMessage(winningMessages);
 
     showPanel("win");
-
     playSound("win");
-
     celebrateWin();
   } else {
     resultMessage = randomMessage(losingMessages);
 
     showPanel("lose");
-
     playSound("obstacle");
   }
 }
 
-/*  WINNING CONFETTI */
+/* ==========================================
+   CONFETTI CELEBRATION
+========================================== */
 
 function celebrateWin() {
   const colors = [
@@ -661,7 +759,6 @@ function celebrateWin() {
 
   confettiLayer.replaceChildren();
 
-  // Create 65 colorful confetti pieces
   for (let i = 0; i < 65; i++) {
     const piece = document.createElement("span");
 
@@ -682,24 +779,21 @@ function celebrateWin() {
     confettiLayer.appendChild(piece);
   }
 
-  // Remove confetti after the animation
   confettiTimer = setTimeout(() => {
     confettiLayer.replaceChildren();
   }, 4200);
 }
 
 /* ==========================================
-   HIGH SCORES
+   SAVE HIGH SCORES
 ========================================== */
 
-// Give each difficulty its own leaderboard
 function scoreKey() {
   return selectedMode === "normal"
     ? "dropByDropScores"
     : `dropByDropScores:${selectedMode}`;
 }
 
-// Load the saved scores
 function loadHighScores() {
   try {
     const saved = JSON.parse(
@@ -717,7 +811,6 @@ function loadHighScores() {
   }
 }
 
-// Save a new high score
 function saveHighScore(newScore) {
   const scores = [
     ...loadHighScores(),
@@ -732,15 +825,14 @@ function saveHighScore(newScore) {
       JSON.stringify(scores)
     );
   } catch {
-    // Some browsers might block storage
+    // Storage may be blocked in private browsing
   }
 }
 
 /* ==========================================
-   MENU BUTTON HELPERS
+   GAME MENU HELPERS
 ========================================== */
 
-// Create a menu button
 function menuButton(label, action, primary = false) {
   return `
     <button
@@ -753,7 +845,6 @@ function menuButton(label, action, primary = false) {
   `;
 }
 
-// Group menu buttons
 function actionButtons(...buttons) {
   return `
     <div class="dialog-actions">
@@ -762,20 +853,21 @@ function actionButtons(...buttons) {
   `;
 }
 
-// Decide which screen the Back button returns to
 function backAction() {
   if (gameState === "paused") {
     return "pause";
   }
 
   if (gameState === "finished") {
-    return score >= settings().goal ? "win" : "lose";
+    return score >= settings().goal
+      ? "win"
+      : "lose";
   }
 
   return "welcome";
 }
 
-// Create difficulty choices in the welcome menu
+// Difficulty buttons on the welcome screen
 function modeButtons() {
   return `
     <div class="difficulty-options" aria-label="Choose difficulty">
@@ -797,20 +889,18 @@ function modeButtons() {
 }
 
 /* ==========================================
-   GAME SCREENS AND MENUS
+   GAME MENUS
 ========================================== */
 
 function showPanel(screen) {
   const mode = settings();
-
   let html = "";
 
-  // Welcome screen
+  // Welcome menu
   if (screen === "welcome") {
     html = `
       <div class="dialog-accent">💧</div>
       <p class="dialog-kicker">A GAME FOR CLEAN WATER</p>
-
       <h2>Drop by Drop</h2>
 
       <p>
@@ -832,14 +922,14 @@ function showPanel(screen) {
     `;
   }
 
-  // How to Play screen
+  // Instructions
   else if (screen === "rules") {
     html = `
       <h2>How to Play</h2>
 
       <p>
-        Tap or click the falling items before
-        they hit the ground.
+        Tap or click the falling items
+        before they hit the ground.
       </p>
 
       <div class="rules-list">
@@ -847,17 +937,14 @@ function showPanel(screen) {
           <span class="rule-icon">💧</span>
           <strong>+1</strong> Clean water
         </div>
-
         <div class="rule">
           <span class="rule-icon">⚫</span>
           <strong>−1</strong> Dirty water
         </div>
-
         <div class="rule">
           <span class="rule-icon">🗑️</span>
           <strong>−2</strong> Trash obstacle
         </div>
-
         <div class="rule">
           <span class="rule-icon">⭐</span>
           <strong>+3</strong> Water filter bonus
@@ -877,7 +964,7 @@ function showPanel(screen) {
     `;
   }
 
-  // Pause menu
+  // Pause screen
   else if (screen === "pause") {
     html = `
       <div class="dialog-accent">⏸</div>
@@ -935,7 +1022,7 @@ function showPanel(screen) {
     `;
   }
 
-  // Information about charity: water
+  // About screen
   else if (screen === "about") {
     html = `
       <p class="dialog-kicker">
@@ -951,23 +1038,21 @@ function showPanel(screen) {
       </p>
 
       <p>
-        Clean water helps communities thrive
-        by improving health and supporting
-        access to education.
+        Clean water helps communities thrive by
+        improving health and supporting access
+        to education.
       </p>
 
       <p>
         <a href="https://www.charitywater.org/"
-           target="_blank"
-           rel="noopener noreferrer">
+           target="_blank" rel="noopener noreferrer">
           Visit charity: water ↗
         </a>
       </p>
 
       <p>
         <a href="https://www.charitywater.org/donate"
-           target="_blank"
-           rel="noopener noreferrer">
+           target="_blank" rel="noopener noreferrer">
           Donate to clean water ↗
         </a>
       </p>
@@ -1011,7 +1096,7 @@ function showPanel(screen) {
     `;
   }
 
-  // Update the displayed menu
+  // Display the selected menu
   overlayContent.innerHTML = html;
   overlay.hidden = false;
 
@@ -1023,11 +1108,12 @@ function showPanel(screen) {
 }
 
 /* ==========================================
-   HANDLE MENU BUTTON CLICKS
+   BUTTON EVENT LISTENERS
 ========================================== */
 
+// Handle menu clicks
 overlayContent.addEventListener("click", event => {
-  // Difficulty selection from the welcome screen
+  // Difficulty choices
   const modeButton = event.target.closest("[data-mode]");
 
   if (modeButton) {
@@ -1035,7 +1121,6 @@ overlayContent.addEventListener("click", event => {
     return;
   }
 
-  // Normal menu buttons
   const button = event.target.closest("[data-action]");
 
   if (!button) return;
@@ -1044,45 +1129,33 @@ overlayContent.addEventListener("click", event => {
 
   if (action === "start") {
     startGame();
-  }
-
-  else if (action === "resume") {
+  } else if (action === "resume") {
     resumeGame();
-  }
-
-  else if (action === "reset") {
+  } else if (action === "reset") {
     playSound("button");
     resetGame();
-  }
-
-  else if (action === "back") {
+  } else if (action === "back") {
     playSound("button");
     showPanel(backAction());
-  }
-
-  else if (["rules", "about", "scores"].includes(action)) {
+  } else if (
+    ["rules", "about", "scores"].includes(action)
+  ) {
     playSound("button");
     showPanel(action);
   }
 });
 
-/* ==========================================
-   MAIN GAME CONTROL BUTTONS
-========================================== */
-
-// Pause and Resume
+// Pause button
 pauseBtn.addEventListener("click", () => {
   if (gameState === "playing") {
     playSound("button");
     pauseGame();
-  }
-
-  else if (gameState === "paused") {
+  } else if (gameState === "paused") {
     resumeGame();
   }
 });
 
-// Reset
+// Reset button
 document.getElementById("reset-btn").addEventListener(
   "click",
   () => {
@@ -1091,7 +1164,7 @@ document.getElementById("reset-btn").addEventListener(
   }
 );
 
-// Pause the game when opening another menu
+// Pause when opening another menu
 function openMenu(screen) {
   if (gameState === "playing") {
     pauseGame();
@@ -1101,7 +1174,7 @@ function openMenu(screen) {
   showPanel(screen);
 }
 
-// Header navigation buttons
+// Header buttons
 document.getElementById("how-btn").addEventListener(
   "click",
   () => openMenu("rules")
@@ -1117,10 +1190,7 @@ document.getElementById("scores-btn").addEventListener(
   () => openMenu("scores")
 );
 
-/* ==========================================
-   DIFFICULTY SELECTOR
-========================================== */
-
+// Difficulty dropdown
 difficultySelect.addEventListener("change", event => {
   const next = event.target.value;
 
@@ -1128,7 +1198,7 @@ difficultySelect.addEventListener("change", event => {
     return;
   }
 
-  // Confirm before restarting an active round
+  // Confirm before restarting an active game
   if (
     (gameState === "playing" || gameState === "paused") &&
     !window.confirm(
@@ -1142,12 +1212,15 @@ difficultySelect.addEventListener("change", event => {
   chooseDifficulty(next);
 });
 
-/* ==========================================
-   SOUND TOGGLE BUTTON
-========================================== */
-
+// Turn sound on or off
 soundBtn.addEventListener("click", () => {
   soundEnabled = !soundEnabled;
+
+  if (!soundEnabled) {
+    stopAllSounds();
+  } else {
+    unlockAudio();
+  }
 
   updateSoundButton();
 
@@ -1156,10 +1229,20 @@ soundBtn.addEventListener("click", () => {
   }
 });
 
+// Automatically pause if Safari switches tabs
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden && gameState === "playing") {
+    pauseGame();
+  }
+
+  if (document.hidden) {
+    stopAllSounds();
+  }
+});
+
 /* ==========================================
-   INITIALIZE THE GAME
+   INITIALIZE GAME
 ========================================== */
 
-// Set up sound button and show welcome screen
 updateSoundButton();
 resetGame();
