@@ -1,9 +1,5 @@
 
-/* ==========================================
-   DROP BY DROP - CSS
-   charity: water inspired colors
-========================================== */
-
+/* charity: water inspired color palette */
 :root {
   --yellow: #FFC907;
   --blue: #2E9DF7;
@@ -15,49 +11,32 @@
   --red: #F5402C;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
 
-[hidden] {
-  display: none !important;
-}
-
-/* Main text uses charity: water-inspired typography */
 body {
   margin: 0;
   min-height: 100vh;
   background: #f2f7fa;
   color: var(--ink);
-  font-family: "Proxima Nova", "Avenir Next",
-               Avenir, Montserrat, Arial, sans-serif;
+  font-family: "Proxima Nova", "Avenir Next", Avenir,
+               Montserrat, Arial, sans-serif;
 }
 
-button, select, a {
-  -webkit-tap-highlight-color: transparent;
-}
+button, a { -webkit-tap-highlight-color: transparent; }
+button { font: inherit; }
 
-button, select {
-  font: inherit;
-}
-
-button:focus-visible,
-a:focus-visible,
-select:focus-visible {
+button:focus-visible, a:focus-visible {
   outline: 3px solid var(--blue);
   outline-offset: 3px;
 }
 
-/* Game wrapper */
 .game-wrapper {
   width: min(100% - 32px, 1020px);
   margin: 24px auto 30px;
 }
 
-/* ==========================================
-   HEADER
-========================================== */
-
+/* HEADER */
 .site-header {
   display: flex;
   align-items: center;
@@ -104,14 +83,9 @@ select:focus-visible {
   cursor: pointer;
 }
 
-.nav-button:hover {
-  background: var(--cream);
-}
+.nav-button:hover { background: var(--cream); }
 
-/* ==========================================
-   GAME TITLE
-========================================== */
-
+/* TITLE */
 .intro-heading {
   text-align: center;
   padding: 17px 10px 19px;
@@ -132,9 +106,7 @@ select:focus-visible {
   letter-spacing: -2px;
 }
 
-.game-title span {
-  color: #218aca;
-}
+.game-title span { color: #218aca; }
 
 .game-tagline {
   font-size: 15px;
@@ -142,100 +114,7 @@ select:focus-visible {
   color: #45505a;
 }
 
-/* ==========================================
-   NEW: DIFFICULTY AND SOUND SETTINGS
-========================================== */
-
-.settings-bar {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 11px 18px;
-  background: #e8f5fc;
-  border: 1px solid #c8e1ee;
-  border-bottom: 0;
-}
-
-.settings-bar label {
-  font-weight: 800;
-  font-size: 13px;
-}
-
-#difficulty-select {
-  appearance: auto;
-  border: 1px solid #94b2c3;
-  border-radius: 7px;
-  padding: 7px 12px;
-  font-size: 14px;
-  font-weight: 700;
-  color: #133b4e;
-  background: #fff;
-  cursor: pointer;
-}
-
-.mode-details {
-  font-size: 12px;
-  font-weight: 600;
-  color: #326072;
-}
-
-.sound-btn {
-  margin-left: auto;
-  border: 1px solid #94b2c3;
-  border-radius: 7px;
-  padding: 8px 12px;
-  background: #fff;
-  font-size: 13px;
-  font-weight: 800;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.sound-btn[aria-pressed="false"] {
-  color: #5b6b75;
-}
-
-/* Difficulty choices in the welcome screen */
-.difficulty-options {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  margin: 18px 0 10px;
-}
-
-.difficulty-option {
-  border: 2px solid #b9c9d3;
-  background: #f5f9fb;
-  border-radius: 10px;
-  padding: 11px 7px;
-  cursor: pointer;
-  color: #1a3442;
-  text-align: center;
-}
-
-.difficulty-option strong {
-  display: block;
-  font-size: 14px;
-}
-
-.difficulty-option small {
-  display: block;
-  margin-top: 4px;
-  font-size: 10px;
-  line-height: 1.4;
-}
-
-.difficulty-option.is-selected {
-  background: #fff9db;
-  border-color: #FFC907;
-  box-shadow: 0 0 0 1px #FFC907;
-}
-
-/* ==========================================
-   SCORE PANEL
-========================================== */
-
+/* SCORE PANEL */
 .score-panel {
   display: flex;
   align-items: center;
@@ -264,9 +143,7 @@ select:focus-visible {
   font-variant-numeric: tabular-nums;
 }
 
-.stat-value small {
-  font-size: 14px;
-}
+.stat-value small { font-size: 14px; }
 
 .supply-stat {
   flex: 1;
@@ -286,7 +163,6 @@ select:focus-visible {
   font-weight: 800;
 }
 
-/* Water supply progress bar */
 .water-meter {
   height: 13px;
   background: #edf1f4;
@@ -312,10 +188,7 @@ select:focus-visible {
   gap: 8px;
 }
 
-/* ==========================================
-   BUTTONS
-========================================== */
-
+/* BUTTONS */
 .button {
   border: 2px solid transparent;
   border-radius: 8px;
@@ -346,10 +219,7 @@ select:focus-visible {
   color: #253643;
 }
 
-/* ==========================================
-   GAME AREA AND SKY
-========================================== */
-
+/* GAME BACKGROUND */
 #game-container {
   position: relative;
   overflow: hidden;
@@ -384,8 +254,7 @@ select:focus-visible {
   border-radius: 50px;
 }
 
-.cloud::before,
-.cloud::after {
+.cloud::before, .cloud::after {
   content: "";
   position: absolute;
   background: inherit;
@@ -417,10 +286,7 @@ select:focus-visible {
   transform: scale(.75);
 }
 
-/* ==========================================
-   HILLS AND GRASS
-========================================== */
-
+/* HILLS AND GRASS */
 .hill {
   position: absolute;
   bottom: 31px;
@@ -449,10 +315,7 @@ select:focus-visible {
   border-top: 8px solid #91c870;
 }
 
-/* ==========================================
-   VILLAGE HOUSES
-========================================== */
-
+/* VILLAGE HOUSES */
 .village {
   position: absolute;
   bottom: 30px;
@@ -511,10 +374,7 @@ select:focus-visible {
   transform-origin: bottom;
 }
 
-/* ==========================================
-   TREES
-========================================== */
-
+/* TREES */
 .tree {
   position: absolute;
   bottom: 0;
@@ -536,9 +396,7 @@ select:focus-visible {
   box-shadow: 13px 2px 0 #63a866;
 }
 
-.tree-one {
-  left: 24%;
-}
+.tree-one { left: 24%; }
 
 .tree-two {
   left: 71%;
@@ -552,31 +410,18 @@ select:focus-visible {
   transform-origin: bottom;
 }
 
-/* ==========================================
-   FALLING GAME ITEMS
-========================================== */
-
-#items-layer,
-#feedback-layer,
-#confetti-layer {
+/* GAME LAYERS */
+#items-layer, #feedback-layer, #confetti-layer {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
 
-#items-layer {
-  z-index: 3;
-}
+#items-layer { z-index: 3; }
+#feedback-layer { z-index: 5; }
+#confetti-layer { z-index: 12; }
 
-#feedback-layer {
-  z-index: 5;
-}
-
-#confetti-layer {
-  z-index: 12;
-}
-
-/* Falling item buttons */
+/* FALLING WATER AND OBSTACLES */
 .falling-item {
   position: absolute;
   top: -75px;
@@ -589,13 +434,15 @@ select:focus-visible {
   cursor: pointer;
   pointer-events: auto;
   touch-action: none;
+  animation: dropFall linear forwards;
+
+  /* Safari performance improvements */
+  will-change: transform;
   user-select: none;
   -webkit-user-select: none;
-  animation: dropFall linear forwards;
   filter: drop-shadow(0 3px 1px #00336633);
 }
 
-/* Clean water drop */
 .falling-item .shape {
   display: block;
   width: 75%;
@@ -607,17 +454,13 @@ select:focus-visible {
   transition: scale .12s;
 }
 
-.falling-item:hover .shape {
-  scale: 1.12;
-}
+.falling-item:hover .shape { scale: 1.12; }
 
-/* Dirty water obstacle */
 .falling-item.dirty .shape {
   background: linear-gradient(135deg, #202b34, #75818b);
   border-color: #171d22;
 }
 
-/* Trash and bonus stars */
 .falling-item.trash,
 .falling-item.star {
   font-size: 37px;
@@ -629,26 +472,21 @@ select:focus-visible {
   outline: 3px solid var(--yellow);
 }
 
-/* Falling animation */
+/* More efficient than animating top */
 @keyframes dropFall {
   from {
-    top: -75px;
+    transform: translate3d(0, 0, 0);
   }
-
   to {
-    top: calc(100% + 75px);
+    transform: translate3d(0, var(--drop-distance), 0);
   }
 }
 
-/* Freeze the falling drops when paused */
 .is-paused .falling-item {
   animation-play-state: paused;
 }
 
-/* ==========================================
-   POINT FEEDBACK
-========================================== */
-
+/* POINT FEEDBACK */
 .feedback {
   position: absolute;
   font-weight: 900;
@@ -658,9 +496,7 @@ select:focus-visible {
   animation: floatUp .7s ease-out forwards;
 }
 
-.feedback.negative {
-  color: #a52020;
-}
+.feedback.negative { color: #a52020; }
 
 @keyframes floatUp {
   to {
@@ -669,46 +505,7 @@ select:focus-visible {
   }
 }
 
-/* ==========================================
-   NEW: MILESTONE MESSAGES
-========================================== */
-
-.milestone-banner {
-  position: absolute;
-  top: 19px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 8;
-  width: max-content;
-  max-width: calc(100% - 30px);
-  padding: 11px 18px;
-  background: #fffdf1;
-  border: 3px solid #FFC907;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px #153f5560;
-  font-size: clamp(13px, 3.2vw, 17px);
-  font-weight: 900;
-  text-align: center;
-  pointer-events: none;
-  animation: milestonePop .25s ease-out;
-}
-
-@keyframes milestonePop {
-  from {
-    transform: translateX(-50%) scale(.9);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateX(-50%) scale(1);
-    opacity: 1;
-  }
-}
-
-/* ==========================================
-   GAME MENUS AND OVERLAY
-========================================== */
-
+/* GAME MENUS */
 .overlay {
   position: absolute;
   inset: 0;
@@ -789,9 +586,7 @@ select:focus-visible {
   text-align: center;
 }
 
-.dialog .rule strong {
-  white-space: nowrap;
-}
+.dialog .rule strong { white-space: nowrap; }
 
 .dialog .high-score-list {
   max-width: 260px;
@@ -816,10 +611,7 @@ select:focus-visible {
   font-weight: 800;
 }
 
-/* ==========================================
-   CONFETTI ANIMATION
-========================================== */
-
+/* CONFETTI */
 .confetti {
   position: absolute;
   top: -24px;
@@ -835,9 +627,7 @@ select:focus-visible {
     opacity: 1;
   }
 
-  95% {
-    opacity: 1;
-  }
+  95% { opacity: 1; }
 
   100% {
     transform: translateY(570px) rotate(850deg);
@@ -845,10 +635,7 @@ select:focus-visible {
   }
 }
 
-/* ==========================================
-   FOOTER AND CHARITY LINKS
-========================================== */
-
+/* FOOTER */
 .site-footer {
   display: flex;
   align-items: center;
@@ -859,12 +646,124 @@ select:focus-visible {
   font-size: 13px;
 }
 
-.site-footer p {
-  margin: 0;
+.site-footer p { margin: 0; }
+.site-footer a { color: var(--navy); }
+
+/* DIFFICULTY, SOUND AND MILESTONES */
+.settings-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 11px 18px;
+  background: #e8f5fc;
+  border: 1px solid #c8e1ee;
+  border-bottom: 0;
 }
 
-.site-footer a {
-  color: var(--navy);
+.settings-bar label {
+  font-weight: 800;
+  font-size: 13px;
+}
+
+#difficulty-select {
+  appearance: auto;
+  border: 1px solid #94b2c3;
+  border-radius: 7px;
+  padding: 7px 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #133b4e;
+  background: #fff;
+  cursor: pointer;
+}
+
+.mode-details {
+  font-size: 12px;
+  font-weight: 600;
+  color: #326072;
+}
+
+.sound-btn {
+  margin-left: auto;
+  border: 1px solid #94b2c3;
+  border-radius: 7px;
+  padding: 8px 12px;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sound-btn[aria-pressed="false"] {
+  color: #5b6b75;
+}
+
+.difficulty-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 18px 0 10px;
+}
+
+.difficulty-option {
+  border: 2px solid #b9c9d3;
+  background: #f5f9fb;
+  border-radius: 10px;
+  padding: 11px 7px;
+  cursor: pointer;
+  color: #1a3442;
+  text-align: center;
+}
+
+.difficulty-option strong {
+  display: block;
+  font-size: 14px;
+}
+
+.difficulty-option small {
+  display: block;
+  margin-top: 4px;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.difficulty-option.is-selected {
+  background: #fff9db;
+  border-color: #FFC907;
+  box-shadow: 0 0 0 1px #FFC907;
+}
+
+.milestone-banner {
+  position: absolute;
+  top: 19px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 8;
+  width: max-content;
+  max-width: calc(100% - 30px);
+  padding: 11px 18px;
+  background: #fffdf1;
+  border: 3px solid #FFC907;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px #153f5560;
+  font-size: clamp(13px, 3.2vw, 17px);
+  font-weight: 900;
+  text-align: center;
+  pointer-events: none;
+  animation: milestonePop .25s ease-out;
+}
+
+@keyframes milestonePop {
+  from {
+    transform: translateX(-50%) scale(.9);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
 }
 
 .footer-links {
@@ -883,10 +782,7 @@ select:focus-visible {
   font-weight: 900;
 }
 
-/* ==========================================
-   RESPONSIVE MOBILE STYLING
-========================================== */
-
+/* MOBILE LAYOUT */
 @media (max-width: 650px) {
   .game-wrapper {
     width: min(100% - 16px, 510px);
@@ -899,47 +795,17 @@ select:focus-visible {
     gap: 6px;
   }
 
-  .brand img {
-    max-height: 34px;
-  }
+  .brand img { max-height: 34px; }
+  .brand-fallback { font-size: 21px; }
+  .header-nav { justify-content: center; }
+  .nav-button { padding: 7px 9px; font-size: 12px; }
+  .intro-heading { padding: 12px 6px; }
+  .game-title { letter-spacing: -1px; }
+  .game-tagline { font-size: 12px; }
 
-  .brand-fallback {
-    font-size: 21px;
-  }
-
-  .header-nav {
-    justify-content: center;
-  }
-
-  .nav-button {
-    padding: 7px 9px;
-    font-size: 12px;
-  }
-
-  .intro-heading {
-    padding: 12px 6px;
-  }
-
-  .game-title {
-    letter-spacing: -1px;
-  }
-
-  .game-tagline {
-    font-size: 12px;
-  }
-
-  .settings-bar {
-    padding: 9px 11px;
-    gap: 7px;
-  }
-
-  .mode-details {
-    flex: 1 0 130px;
-  }
-
-  .sound-btn {
-    margin-left: 0;
-  }
+  .settings-bar { padding: 9px 11px; gap: 7px; }
+  .mode-details { flex: 1 0 130px; }
+  .sound-btn { margin-left: 0; }
 
   .score-panel {
     gap: 8px 12px;
@@ -952,47 +818,22 @@ select:focus-visible {
     flex-basis: 100%;
   }
 
-  .game-controls {
-    margin-left: auto;
-  }
-
-  .button {
-    padding: 9px 12px;
-    font-size: 13px;
-  }
-
-  .stat-value {
-    font-size: 23px;
-  }
+  .game-controls { margin-left: auto; }
+  .button { padding: 9px 12px; font-size: 13px; }
+  .stat-value { font-size: 23px; }
 
   #game-container {
     height: min(62vh, 540px);
     min-height: 365px;
   }
 
-  .dialog {
-    padding: 19px 16px;
-  }
+  .dialog { padding: 19px 16px; }
+  .house-two { display: none; }
 
-  .difficulty-options {
-    gap: 5px;
-  }
-
-  .difficulty-option {
-    padding: 8px 3px;
-  }
-
-  .difficulty-option strong {
-    font-size: 12px;
-  }
-
-  .difficulty-option small {
-    font-size: 9px;
-  }
-
-  .house-two {
-    display: none;
-  }
+  .difficulty-options { gap: 5px; }
+  .difficulty-option { padding: 8px 3px; }
+  .difficulty-option strong { font-size: 12px; }
+  .difficulty-option small { font-size: 9px; }
 
   .site-footer {
     justify-content: center;
@@ -1000,14 +841,9 @@ select:focus-visible {
     gap: 12px;
   }
 
-  .footer-links {
-    justify-content: center;
-  }
+  .footer-links { justify-content: center; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .button,
-  .water-fill {
-    transition: none;
-  }
+  .button, .water-fill { transition: none; }
 }
