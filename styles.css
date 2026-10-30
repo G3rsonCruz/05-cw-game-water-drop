@@ -36,6 +36,8 @@ button:focus-visible, a:focus-visible {
   margin: 24px auto 30px;
 }
 
+/* Main page container */
+
 /* HEADER */
 .site-header {
   display: flex;
@@ -115,6 +117,7 @@ button:focus-visible, a:focus-visible {
 }
 
 /* SCORE PANEL */
+/* The score panel holds the stats and current round controls. */
 .score-panel {
   display: flex;
   align-items: center;
@@ -220,6 +223,7 @@ button:focus-visible, a:focus-visible {
 }
 
 /* GAME BACKGROUND */
+/* This area contains the animated game board and overlays. */
 #game-container {
   position: relative;
   overflow: hidden;

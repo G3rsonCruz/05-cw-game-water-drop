@@ -40,7 +40,7 @@ const difficultySelect = document.getElementById("difficulty-select");
 const modeDetails = document.getElementById("mode-details");
 const soundBtn = document.getElementById("sound-btn");
 
-// Game variables
+// Game variables keep track of the active round and UI state.
 let selectedMode = "normal";
 let score = 0;
 let timeRemaining = MODES.normal.seconds * 1000;
@@ -99,9 +99,7 @@ function settings() {
   return MODES[selectedMode];
 }
 
-/* ==========================================
-   SAFARI-OPTIMIZED AUDIO SYSTEM
-========================================== */
+/*  SAFARI-OPTIMIZED AUDIO SYSTEM */
 
 // Load each WAV only once instead of cloning audio elements.
 const SOUND_FILES = {
@@ -282,9 +280,7 @@ function updateSoundButton() {
   );
 }
 
-/* ==========================================
-   UPDATE SCORE, TIMER AND WATER SUPPLY
-========================================== */
+/* UPDATE SCORE, TIMER AND WATER SUPPLY */
 
 function updateDisplay() {
   const mode = settings();
@@ -319,9 +315,7 @@ function updateDisplay() {
   );
 }
 
-/* ==========================================
-   GAME TIMER FUNCTIONS
-========================================== */
+/* GAME TIMER FUNCTIONS */
 
 function stopTimers() {
   clearInterval(dropMaker);
@@ -378,9 +372,7 @@ function startTimers() {
   }, 100);
 }
 
-/* ==========================================
-   START GAME
-========================================== */
+/* START GAME */
 
 function startGame() {
   stopTimers();
@@ -409,9 +401,7 @@ function startGame() {
   startTimers();
 }
 
-/* ==========================================
-   PAUSE AND RESUME
-========================================== */
+/* PAUSE AND RESUME */
 
 function pauseGame() {
   if (gameState !== "playing") return;
@@ -451,9 +441,7 @@ function resumeGame() {
   startTimers();
 }
 
-/* ==========================================
-   RESET AND DIFFICULTY
-========================================== */
+/*  RESET AND DIFFICULTY */
 
 function resetGame() {
   stopTimers();
@@ -486,9 +474,7 @@ function chooseDifficulty(mode) {
   resetGame();
 }
 
-/* ==========================================
-   MILESTONE MESSAGES
-========================================== */
+/*  MILESTONE MESSAGES */
 
 function showMilestone(message) {
   clearTimeout(bannerTimer);
@@ -527,13 +513,12 @@ function checkMilestones(previousScore) {
   }
 }
 
-/* ==========================================
-   CREATE FALLING ITEMS
-========================================== */
+/* CREATE FALLING ITEMS */
 
 function createDrop() {
   if (gameState !== "playing") return;
 
+  // Spawn a new falling item using the current difficulty settings.
   const mode = settings();
   const chance = Math.random();
 
@@ -646,9 +631,7 @@ function createDrop() {
   itemsLayer.appendChild(item);
 }
 
-/* ==========================================
-   COLLECT ITEMS AND AWARD POINTS
-========================================== */
+/* COLLECT ITEMS AND AWARD POINTS */
 
 function collectItem(item, points) {
   // Prevent duplicate collection
@@ -707,9 +690,7 @@ function showFeedback(x, y, points) {
   });
 }
 
-/* ==========================================
-   END GAME
-========================================== */
+/* END GAME */
 
 function endGame() {
   if (gameState === "finished") return;
@@ -744,9 +725,7 @@ function endGame() {
   }
 }
 
-/* ==========================================
-   CONFETTI CELEBRATION
-========================================== */
+/* CONFETTI CELEBRATION */
 
 function celebrateWin() {
   const colors = [
@@ -784,9 +763,7 @@ function celebrateWin() {
   }, 4200);
 }
 
-/* ==========================================
-   SAVE HIGH SCORES
-========================================== */
+/* SAVE HIGH SCORES */
 
 function scoreKey() {
   return selectedMode === "normal"
@@ -829,9 +806,7 @@ function saveHighScore(newScore) {
   }
 }
 
-/* ==========================================
-   GAME MENU HELPERS
-========================================== */
+/* GAME MENU HELPERS */
 
 function menuButton(label, action, primary = false) {
   return `
