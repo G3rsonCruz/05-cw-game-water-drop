@@ -863,9 +863,7 @@ function modeButtons() {
   `;
 }
 
-/* ==========================================
-   GAME MENUS
-========================================== */
+/*  GAME MENUS */
 
 function showPanel(screen) {
   const mode = settings();
@@ -1082,9 +1080,7 @@ function showPanel(screen) {
   }
 }
 
-/* ==========================================
-   BUTTON EVENT LISTENERS
-========================================== */
+/*  BUTTON EVENT LISTENER */
 
 // Handle menu clicks
 overlayContent.addEventListener("click", event => {
@@ -1215,9 +1211,7 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
-/* ==========================================
-   INITIALIZE GAME
-========================================== */
+/* INITIALIZE GAME */
 
 updateSoundButton();
 resetGame();
