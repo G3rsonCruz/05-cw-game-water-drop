@@ -4,19 +4,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#FFC907">
   <title>Drop by Drop | A Game for Clean Water</title>
+
+  <!-- Free font similar to charity: water's brand fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="styles.css">
   <script src="script.js" defer></script>
 </head>
+
 <body>
   <main class="game-wrapper">
+
+    <!-- Website header -->
     <header class="site-header">
       <div class="brand">
-        <!-- Add the provided charity: water logo to this folder -->
+        <!-- Add the supplied logo to your project folder -->
         <img src="charity-water-logo.png" alt="charity: water"
              onerror="this.hidden=true; this.nextElementSibling.hidden=false">
         <span class="brand-fallback" hidden>charity: water</span>
       </div>
+
       <nav class="header-nav" aria-label="Game navigation">
         <button type="button" id="how-btn" class="nav-button">How to Play</button>
         <button type="button" id="about-btn" class="nav-button">About</button>
@@ -24,14 +35,45 @@
       </nav>
     </header>
 
+    <!-- Game title -->
     <div class="intro-heading">
       <p class="eyebrow">PLAY · LEARN · MAKE A DIFFERENCE</p>
-      <h1 class="game-title">Drop by <span>Drop</span></h1>
-      <p class="game-tagline">Catch clean water. Avoid obstacles. Help fill the village's water supply!</p>
+
+      <h1 class="game-title">
+        Drop by <span>Drop</span>
+      </h1>
+
+      <p class="game-tagline">
+        Catch clean water. Avoid obstacles.
+        Help fill the village's water supply!
+      </p>
     </div>
 
-    <!-- Live score, water progress, timer, and game controls -->
-    <section class="score-panel" aria-label="Game information and controls">
+    <!-- NEW: Difficulty and sound settings -->
+    <div class="settings-bar">
+      <label for="difficulty-select">Difficulty</label>
+
+      <select id="difficulty-select"
+              title="Changing difficulty restarts the current round">
+        <option value="easy">Easy</option>
+        <option value="normal" selected>Normal</option>
+        <option value="hard">Hard</option>
+      </select>
+
+      <span id="mode-details" class="mode-details">
+        20 points · 30 seconds
+      </span>
+
+      <button type="button" id="sound-btn"
+              class="sound-btn" aria-pressed="true">
+        🔊 Sound On
+      </button>
+    </div>
+
+    <!-- Score and timer -->
+    <section class="score-panel"
+             aria-label="Game information and controls">
+
       <div class="stat">
         <span class="stat-label">SCORE</span>
         <strong id="score" class="stat-value" aria-live="polite">0</strong>
@@ -42,31 +84,48 @@
           <span class="stat-label">VILLAGE WATER SUPPLY</span>
           <span id="supply-text">0 / 20</span>
         </div>
-        <div id="water-meter" class="water-meter" role="progressbar"
+
+        <div id="water-meter" class="water-meter"
+             role="progressbar"
              aria-label="Water supply progress"
-             aria-valuemin="0" aria-valuemax="20" aria-valuenow="0">
+             aria-valuemin="0"
+             aria-valuemax="20"
+             aria-valuenow="0">
+
           <div id="water-fill" class="water-fill"></div>
         </div>
       </div>
 
       <div class="stat timer-stat">
         <span class="stat-label">TIME LEFT</span>
+
         <strong class="stat-value">
           <span id="time">30</span><small>s</small>
         </strong>
       </div>
 
       <div class="game-controls">
-        <button type="button" id="pause-btn" class="button button-outline" disabled>Pause</button>
-        <button type="button" id="reset-btn" class="button button-outline">Reset</button>
+        <button type="button" id="pause-btn"
+                class="button button-outline" disabled>
+          Pause
+        </button>
+
+        <button type="button" id="reset-btn"
+                class="button button-outline">
+          Reset
+        </button>
       </div>
     </section>
 
+    <!-- Game area -->
     <section id="game-container" aria-label="Water drop game area">
+
       <!-- Village background -->
       <div class="sun" aria-hidden="true"></div>
+
       <div class="cloud cloud-one" aria-hidden="true"></div>
       <div class="cloud cloud-two" aria-hidden="true"></div>
+
       <div class="hill hill-back" aria-hidden="true"></div>
       <div class="hill hill-front" aria-hidden="true"></div>
 
@@ -81,28 +140,53 @@
 
       <div class="ground" aria-hidden="true"></div>
 
-      <!-- JavaScript adds falling items here -->
+      <!-- JavaScript adds and removes game objects here -->
       <div id="items-layer"></div>
       <div id="feedback-layer" aria-hidden="true"></div>
       <div id="confetti-layer" aria-hidden="true"></div>
 
-      <!-- Menus and result screens -->
+      <!-- NEW: Milestone announcements -->
+      <div id="milestone-banner"
+           class="milestone-banner"
+           role="status"
+           aria-live="polite"
+           hidden>
+      </div>
+
+      <!-- Welcome, pause, instructions, and results -->
       <div id="overlay" class="overlay">
-        <div id="overlay-content" class="dialog"
-             role="dialog" aria-modal="true"
-             aria-label="Game menu"></div>
+        <div id="overlay-content"
+             class="dialog"
+             role="dialog"
+             aria-modal="true"
+             aria-label="Game menu">
+        </div>
       </div>
     </section>
 
-    <!-- More information about the clean-water mission -->
+    <!-- NEW: Charity website and donation links -->
     <footer class="site-footer">
-      <p><strong>Clean water changes everything.</strong>
-        Inspired by the mission of charity: water.</p>
-      <a href="https://www.charitywater.org/"
-         target="_blank" rel="noopener noreferrer">
-        Learn about the mission ↗
-      </a>
+      <p>
+        <strong>Clean water changes everything.</strong>
+        Inspired by charity: water.
+      </p>
+
+      <div class="footer-links">
+        <a href="https://www.charitywater.org/"
+           target="_blank"
+           rel="noopener noreferrer">
+          Visit charity: water ↗
+        </a>
+
+        <a href="https://www.charitywater.org/donate"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="donate-link">
+          Donate to Clean Water ↗
+        </a>
+      </div>
     </footer>
+
   </main>
 </body>
 </html>
