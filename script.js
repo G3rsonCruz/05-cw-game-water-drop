@@ -648,9 +648,7 @@ function endGame() {
   }
 }
 
-/* ==========================================
-   WINNING CONFETTI
-========================================== */
+/*  WINNING CONFETTI */
 
 function celebrateWin() {
   const colors = [
